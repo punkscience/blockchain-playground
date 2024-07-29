@@ -18,6 +18,23 @@ type PrivateKey struct {
 	key ed25519.PrivateKey
 }
 
+func NewPrivateKeyFromSeed(seed []byte) *PrivateKey {
+	if len(seed) != seedKeyLen {
+		panic("Something horrible has gone wrong. Seed length must be 32.")
+	}
+
+	return &PrivateKey{key: ed25519.NewKeyFromSeed(seed)}
+}
+
+func NewPrivateKeyFromString(seed string) *PrivateKey {
+	b, err := hex.DecodeString(seed)
+	if err != nil {
+		panic(err)
+	}
+
+	return NewPrivateKeyFromSeed(b)
+}
+
 func GeneratePrivateKey() *PrivateKey {
 	seed := make([]byte, seedKeyLen)
 
